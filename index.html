@@ -111,6 +111,49 @@
       color: var(--marrom);
     }
 
+    .save-the-date {
+      text-align: center;
+      padding: 0 2rem 2rem;
+    }
+    .save-the-date .title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      letter-spacing: 0.25em;
+      color: var(--dourado);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .countdown-item {
+      min-width: 64px;
+      padding: 0.6rem 0.5rem;
+      background: rgba(44, 24, 16, 0.08);
+      border-radius: 6px;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+    }
+    .countdown-item .value {
+      display: block;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--marrom);
+      line-height: 1.2;
+    }
+    .countdown-item .label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: var(--dourado);
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
     .verse-block {
       margin: 2rem 2rem 2.5rem;
       padding: 1.8rem 1.5rem;
@@ -146,14 +189,118 @@
       text-transform: uppercase;
     }
 
+    /* Animação de abertura — tema casamento */
+    .opening {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: linear-gradient(160deg, #1a0f0a 0%, #2c1810 50%, #3d2318 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    .opening.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .opening-rings {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 2rem;
+    }
+    .opening-ring {
+      width: 56px;
+      height: 56px;
+      border: 3px solid var(--dourado-claro);
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.4), inset 0 0 12px rgba(212, 175, 55, 0.15);
+      animation: ring-enter 1.2s ease-out forwards;
+      opacity: 0;
+    }
+    .opening-ring.left { transform: translateX(-80px); animation-delay: 0.2s; }
+    .opening-ring.right { transform: translateX(80px); animation-delay: 0.2s; }
+    .opening-ring.center {
+      width: 44px;
+      height: 44px;
+      margin: 0 -12px;
+      z-index: 1;
+      animation: ring-enter 1s ease-out 0.5s forwards;
+      opacity: 0;
+    }
+    @keyframes ring-enter {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    .opening-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.35em;
+      color: var(--dourado);
+      text-transform: uppercase;
+      animation: text-glow 2s ease-in-out 1s infinite alternate;
+    }
+    @keyframes text-glow {
+      from { opacity: 0.7; text-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+      to { opacity: 1; text-shadow: 0 0 25px rgba(212, 175, 55, 0.5); }
+    }
+    .opening-tap {
+      margin-top: 2rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      color: rgba(212, 175, 55, 0.6);
+      animation: fade-in 0.6s ease 2s forwards;
+      opacity: 0;
+    }
+    @keyframes fade-in {
+      to { opacity: 1; }
+    }
+    .invite {
+      animation: invite-appear 1s ease 0.3s both;
+    }
+    .body-loaded .invite {
+      animation: none;
+    }
+    @keyframes invite-appear {
+      from {
+        opacity: 0;
+        transform: scale(0.96) translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
     @media (max-width: 480px) {
       .invite { margin: 0.5rem; }
       .names h1 { letter-spacing: 0.04em; }
       .verse-block { margin: 1.5rem 1.25rem; padding: 1.25rem; }
+      .opening-ring { width: 44px; height: 44px; }
+      .opening-ring.center { width: 36px; height: 36px; margin: 0 -10px; }
+      .opening-ring.left { transform: translateX(-60px); }
+      .opening-ring.right { transform: translateX(60px); }
     }
   </style>
 </head>
 <body>
+  <div class="opening" id="opening" aria-hidden="false">
+    <div class="opening-rings">
+      <div class="opening-ring left" aria-hidden="true"></div>
+      <div class="opening-ring center" aria-hidden="true"></div>
+      <div class="opening-ring right" aria-hidden="true"></div>
+    </div>
+    <p class="opening-text">Com a bênção de Deus</p>
+    <p class="opening-tap">Toque para abrir o convite</p>
+  </div>
   <div class="invite">
     <p class="top-ornament">Com a bênção de Deus</p>
     <div class="names">
@@ -162,6 +309,27 @@
       <h1>Ester</h1>
     </div>
     <div class="divider"></div>
+    <section class="save-the-date" aria-label="Contagem regressiva">
+      <p class="title">Save the date</p>
+      <div class="countdown" id="countdown">
+        <div class="countdown-item">
+          <span class="value" id="countdown-days">—</span>
+          <span class="label">Dias</span>
+        </div>
+        <div class="countdown-item">
+          <span class="value" id="countdown-hours">—</span>
+          <span class="label">Horas</span>
+        </div>
+        <div class="countdown-item">
+          <span class="value" id="countdown-mins">—</span>
+          <span class="label">Min</span>
+        </div>
+        <div class="countdown-item">
+          <span class="value" id="countdown-secs">—</span>
+          <span class="label">Seg</span>
+        </div>
+      </div>
+    </section>
     <p class="date-time">
       Convidam para a celebração do seu casamento<br>
       <strong>18 de março de 2026</strong><br>
@@ -176,5 +344,54 @@
     </div>
     <p class="bottom-ornament">Sua presença é nossa alegria</p>
   </div>
+  <script>
+    (function () {
+      var opening = document.getElementById('opening');
+      var body = document.body;
+      function hideOpening() {
+        opening.classList.add('hidden');
+        body.classList.add('body-loaded');
+        opening.setAttribute('aria-hidden', 'true');
+      }
+      opening.addEventListener('click', hideOpening, { once: true });
+      opening.addEventListener('touchstart', hideOpening, { once: true, passive: true });
+      setTimeout(hideOpening, 4500);
+    })();
+
+    (function () {
+      var weddingDate = new Date('2026-03-18T18:00:00');
+      var el = {
+        days: document.getElementById('countdown-days'),
+        hours: document.getElementById('countdown-hours'),
+        mins: document.getElementById('countdown-mins'),
+        secs: document.getElementById('countdown-secs')
+      };
+      function pad(n) { return n < 10 ? '0' + n : String(n); }
+      function update() {
+        var now = new Date();
+        var diff = weddingDate - now;
+        if (diff <= 0) {
+          el.days.textContent = '0';
+          el.hours.textContent = '00';
+          el.mins.textContent = '00';
+          el.secs.textContent = '00';
+          return;
+        }
+        var totalSecs = Math.floor(diff / 1000);
+        var secs = totalSecs % 60;
+        var totalMins = Math.floor(totalSecs / 60);
+        var mins = totalMins % 60;
+        var totalHours = Math.floor(totalMins / 60);
+        var hours = totalHours % 24;
+        var days = Math.floor(totalHours / 24);
+        el.days.textContent = String(days);
+        el.hours.textContent = pad(hours);
+        el.mins.textContent = pad(mins);
+        el.secs.textContent = pad(secs);
+      }
+      update();
+      setInterval(update, 1000);
+    })();
+  </script>
 </body>
 </html>
